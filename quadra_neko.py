@@ -1,7 +1,9 @@
 import requests, json
 from quadra_json import kakao_msg
+from quadra_log_module import log_append
 
-def neko_search(flag="kemonomimi"):
+def neko_search(user, flag="kemonomimi"):
+	log_append(user, "flag name : "+flag, "neko",0)
 	r = requests.get("https://nekos.life/api/v2/img/"+flag)
 	r = r.text
 	data = json.loads(r)
