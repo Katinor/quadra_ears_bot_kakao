@@ -1,5 +1,5 @@
 import re
-from quadra_log_module import log_append
+from kakaobot import log_append
 from googletrans import Translator
 
 lang_list = {
@@ -12,11 +12,7 @@ lang_list = {
 	'대만어' : 'zh-TW'
 }
 
-def quadra_trans(msg, user):
-	chat_id = user
-	target = re.search('^사잽아 (?:((?:(?!로).)*)로 )?((?:(?! 번역해줘).)*) 번역해줘', str(msg))
-	target = target.groups()
-
+def quadra_trans(target, user):
 	translator = Translator()
 
 	lang_dest = "ko"
@@ -29,14 +25,14 @@ def quadra_trans(msg, user):
 		asw = translator.translate(target[1],dest = lang_dest)
 		text = asw.src+" -> "+asw.dest+"\n"+asw.text
 		if len(text) > 900 :
-			log_append(chat_id, "Too long to send : "+asw.text, "trans",0)
+			log_append(user, "Too long to send : "+asw.text, "trans",0)
 			return "너무 긴 말은 번역하기 힘들어!"
-		log_append(chat_id, "Success! : "+asw.text, "trans",0)
+		log_append(user, "Success! : "+asw.text, "trans",0)
 		return text
 	except Exception as ex:
 		if ex == ValueError:
-			log_append(chat_id, "Cannot understand dest language.", "trans",0)
+			log_append(user, "Cannot understand dest language.", "trans",0)
 			return "어느 언어로 번역할지 제대로 이해못했어!"
 		else:
-			log_append(chat_id, "Unknown Error : "+str(ex), "trans",0)
+			log_append(user, "Unknown Error : "+str(ex), "trans",0)
 			return "미안해! 번역이 잘 안돼.."
